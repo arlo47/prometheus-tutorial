@@ -1,0 +1,52 @@
+version: "3"
+
+services:
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - ./tmp/prometheus:/prometheus
+      - "./prometheus.yml:/etc/prometheus/prometheus.yml"
+    networks:
+      - localprom
+    ports:
+      - 9090:9090
+
+  node-exporter:
+    image: prom/node-exporter
+    networks:
+      - localprom
+    ports:
+      - 9100:9100
+
+  blackbox-exporter:
+    image: prom/blackbox-exporter
+    networks:
+      - localprom
+    ports:
+      - 9115:9115
+
+  grafana:
+    image: grafana/grafana
+    volumes:
+      - ./tmp/grafana:/grafana
+    networks:
+      - localprom
+    ports:
+      - 3000:3000
+
+  elasticsearch:
+    image: elasticsearch:8.13.0
+    networks:
+      - localprom
+    ports:
+      - 9200:9200
+      - 9300:9300
+    volumes:
+      - ./tmp/elasticseach:/usr/share/elasticsearch/data
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+
+networks:
+  localprom:
+    driver: bridge
