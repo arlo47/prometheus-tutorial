@@ -1,0 +1,8 @@
+[
+  {
+    "targets": ["http://prometheus.io", "https://prometheus.io"],
+    "labels": {
+      "module": "https_2xx"
+    }
+  }
+]

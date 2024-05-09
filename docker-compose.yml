@@ -6,24 +6,22 @@ services:
     volumes:
       - ./tmp/prometheus:/prometheus
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus/targets:/etc/prometheus/targets
     networks:
       - localprom
     ports:
       - 9090:9090
 
-  node-exporter:
-    image: prom/node-exporter
-    networks:
-      - localprom
-    ports:
-      - 9100:9100
-
   blackbox-exporter:
     image: prom/blackbox-exporter
+    volumes:
+      - ./blackbox/blackbox.yml:/etc/blackbox/blackbox.yml
     networks:
       - localprom
     ports:
       - 9115:9115
+    command:
+      - --config.file=/etc/blackbox/blackbox.yml
 
   grafana:
     image: grafana/grafana
